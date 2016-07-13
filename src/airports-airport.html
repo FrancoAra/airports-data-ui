@@ -1,0 +1,22 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="airports-airport">
+  <template>
+    <style>
+    </style>
+
+    <h2>{{airportName}}</h2>
+  </template>
+  <script>
+    Polymer({
+      is: 'airports-airport',
+
+      properties: {
+        airportName: {
+          type: String,
+          value: 'Airport'
+        }
+      }
+    });
+  </script>
+</dom-module>

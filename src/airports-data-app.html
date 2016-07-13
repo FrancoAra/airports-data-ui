@@ -1,0 +1,115 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+
+<link rel="import" href="airports-query.html">
+<link rel="import" href="airports-reports.html">
+<link rel="import" href="airports-airport.html">
+
+<dom-module id="airports-data-app">
+  <template>
+    <style is="custom-style">
+    :host {
+      display: block;
+      box-sizing: border-box;
+      --app-primary-color: #202020;
+      --app-secondary-color: #757575;
+      --app-accent-color: #e50685;
+      --paper-button-ink-color: var(--app-accent-color);
+      --paper-icon-button-ink-color: var(--app-accent-color);
+      --paper-spinner-color: var(--app-accent-color);
+    }
+
+    app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 132px;
+      color: #fff;
+      border-bottom: 2px solid;
+      border-color: var(--app-accent-color);
+      background-color: var(--app-primary-color);
+      --app-header-background-rear-layer: {
+        background-color: var(--app-secundary-color);
+      };
+    }
+
+    app-toolbar {
+      margin-bottom: 20px;
+    }
+
+    app-toolbar > h1 {
+      margin: 0 0 4px 0;
+      font-size: 1.3em;
+      font-weight: 500;
+    }
+
+    paper-tabs {
+      max-width: 700px;
+      --paper-tabs-selection-bar-color: var(--app-accent-color);
+    }
+
+    paper-tab {
+      --paper-tab-ink: var(--app-accent-color);
+    }
+
+    .content {
+      padding: 132px 50px 50px 50px;
+    }
+
+    @media (max-width: 767px) {
+      app-toolbar > h1 {
+        font-size: 1.1em;
+      }
+
+      .content {
+        padding: 132px 20px 20px 20px;
+      }
+    }
+    </style>
+
+    <app-header condenses reveals fixed effects="waterfall">
+      <app-toolbar>
+        <h1 main-title>Airports Data</h1>
+      </app-toolbar>
+
+      <paper-tabs selected="{{page}}" attr-for-selected="name" sticky>
+        <paper-tab name="query">Query</paper-tab>
+        <paper-tab name="reports">Reports</paper-tab>
+      </paper-tabs>
+    </app-header>
+
+    <div class="content">
+      <iron-pages role="main" selected="[[page]]" attr-for-selected="name" selected-attribute="visible">
+        <airports-query name="query">Hola</airports-query>
+        <airports-reports name="reports">Mundo!</airports-reports>
+        <airports-airport name="airport">Mundo!</airports-airport>
+      </iron-pages>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+
+      is: 'airports-data-app',
+
+      properties: {
+        page: {
+          type: String,
+          value: 'query'
+        }
+      },
+
+    });
+  </script>
+</dom-module>
