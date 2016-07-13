@@ -1,0 +1,7 @@
+{
+  "name": "airports-data-ui",
+  "short_name": "airports-data-ui",
+  "description": "Visualization of airports data published as open data",
+  "start_url": "/",
+  "display": "standalone"
+}
