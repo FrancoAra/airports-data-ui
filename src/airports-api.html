@@ -1,0 +1,21 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="api-caller-behavior.html">
+
+<dom-module id="airports-api">
+  <template></template>
+
+  <script>
+    Polymer({
+
+      is: 'airports-api',
+
+      behaviors: [ApiCallerBehavior],
+
+      airportsPage: function (country, page, done) {
+        this.ajax.method = 'GET';
+        this.ajax.url = this.rpath('/api/'+country+'/airports/'+page);
+        this.request(done);
+      }
+    });
+  </script>
+</dom-module>

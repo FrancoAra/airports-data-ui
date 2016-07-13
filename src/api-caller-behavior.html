@@ -1,0 +1,33 @@
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<script>
+  ApiCallerBehavior = {
+
+    properties: {
+      base: {
+        type: String,
+        value: '/api'
+      }
+    },
+
+    _onResponse: function (event, request) {
+      if (typeof request.done !== "undefined")
+        request.done(request.response);
+    },
+
+    request: function (done) {
+      this.ajax.generateRequest().done = function (response) {
+        done(response);
+      };
+    },
+
+    rpath: function (path) {
+      return this.base + path;
+    },
+
+    created: function () {
+      this.ajax = document.createElement('iron-ajax');
+      this.listen(this.ajax, 'response', '_onResponse');
+    }
+  };
+</script>

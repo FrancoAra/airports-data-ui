@@ -1,0 +1,38 @@
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/paper-styles/color.html">
+
+<dom-module id="airports-card-info">
+  <template>
+    <style>
+    :host {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .name {
+      font-weight: bold;
+    }
+
+    .data {
+      color: var(--paper-grey-600);
+    }
+    </style>
+
+    <div class="name">{{name}}</div>
+    <div class="data">{{data}}</div>
+  </template>
+  <script>
+    Polymer({
+      is: 'airports-card-info',
+
+      properties: {
+
+        name: String,
+
+        data: String
+      }
+    });
+  </script>
+</dom-module>

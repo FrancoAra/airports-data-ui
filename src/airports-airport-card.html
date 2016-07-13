@@ -1,0 +1,52 @@
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<link rel="import" href="airports-card-info.html">
+
+<dom-module id="airports-airport-card">
+  <template>
+    <style>
+    :host {
+      display: block;
+    }
+
+    paper-card {
+      width: 100%;
+    }
+
+    .airport-light {
+      color: var(--paper-grey-600);
+    }
+
+    paper-button {
+      color: black;
+      background-color: white;
+      width: 100%;
+    }
+    </style>
+
+    <paper-card heading="[[data.ident]]: [[data.name]]">
+      <div class="card-content">
+        <airports-card-info name="Type" data="[[data.type]]"></airports-card-info>
+        <airports-card-info name="Latitude" data="[[data.latitude_deg]]"></airports-card-info>
+        <airports-card-info name="Longitude" data="[[data.longitude_deg]]"></airports-card-info>
+      </div>
+      <div class="card-actions">
+        <paper-button>See Runways</paper-button>
+      </div>
+    </paper-card>
+  </template>
+  <script>
+    Polymer({
+      is: 'airports-airport-card',
+
+      properties: {
+        data: Object
+      }
+    });
+  </script>
+</dom-module>

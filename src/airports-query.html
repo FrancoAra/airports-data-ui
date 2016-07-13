@@ -1,15 +1,117 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/paper-search/paper-search.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="airports-api.html">
+<link rel="import" href="airports-airport-card.html">
 
 <dom-module id="airports-query">
   <template>
     <style>
+    :host {
+    }
+
+    .results {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    airports-airport-card {
+      margin-bottom: 10px;
+    }
+
+    .button-wrapper {
+      @apply(--layout-vertical);
+      @apply(--layout-center);
+    }
+
+    paper-button {
+      color: white;
+      background-color: var(--app-accent-color);
+      width: 100%;
+    }
+
+    .load-more {
+      width: 500px;
+    }
+
+    @media (max-width: 767px) {
+
+      .load-more {
+        width: 100%;
+      }
+    }
     </style>
 
-    <h2>Query</h2>
+    <airports-api id="api" base="[[apiBase]]"></airports-api>
+
+    <paper-search-bar
+      placeholder="Search Country"
+      hide-filter-button
+      query="{{search}}"
+      on-paper-search-search="_query">
+    </paper-search-bar>
+
+    <div class="results">
+      <template is="dom-repeat" items="[[result]]">
+        <airports-airport-card data="[[item]]"></airports-airport-card>
+      </template>
+    </div>
+
+    <div class="button-wrapper">
+      <paper-button raised hidden="{{hideLoadMore}}" on-tap="_loadMore">Load More</paper-button>
+    </div>
   </template>
   <script>
     Polymer({
-      is: 'airports-query'
+      is: 'airports-query',
+
+      properties: {
+
+        search: String,
+
+        apiBase: String,
+
+        page: Number,
+
+        hideLoadMore: {
+          type: Boolean,
+          value: true
+        }
+      },
+
+      _query: function () {
+        var self = this;
+        this.result = [];
+        this.page = 1;
+        this.$.api.airportsPage(this.search, 1, function (airports) {
+          self.result = airports;
+          if (airports.length == 0 || airports.length < 10)
+            self.hideLoadMore = true;
+          else
+            self.hideLoadMore = false;
+        });
+      },
+
+      _loadMore: function () {
+        var self = this;
+        this.$.api.airportsPage(this.search, ++this.page, function (airports) {
+          for (var i in airports) {
+            self.push('result', airports[i])
+          }
+          if (airports.length == 0 || airports.length < 10)
+            self.hideLoadMore = true;
+          else
+            self.hideLoadMore = false;
+        });
+      },
+
+      ready: function () {
+        this.search = "NE";
+        this._query();
+      }
     });
   </script>
 </dom-module>

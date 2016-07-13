@@ -1,4 +1,4 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
@@ -10,6 +10,9 @@
 <link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/helpers/helpers.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
 
 <link rel="import" href="airports-query.html">
 <link rel="import" href="airports-reports.html">
@@ -21,16 +24,21 @@
     :host {
       display: block;
       box-sizing: border-box;
+      padding-top: 172px;
+      padding-bottom: 20px;
       --app-primary-color: #202020;
       --app-secondary-color: #757575;
       --app-accent-color: #e50685;
       --paper-button-ink-color: var(--app-accent-color);
       --paper-icon-button-ink-color: var(--app-accent-color);
       --paper-spinner-color: var(--app-accent-color);
+      background-color: #eee;
+      min-height: 100vh;
     }
 
     app-header {
       position: fixed;
+      z-index: 1;
       top: 0;
       left: 0;
       width: 100%;
@@ -56,6 +64,7 @@
 
     paper-tabs {
       max-width: 700px;
+      margin: 0 auto;
       --paper-tabs-selection-bar-color: var(--app-accent-color);
     }
 
@@ -63,39 +72,64 @@
       --paper-tab-ink: var(--app-accent-color);
     }
 
-    .content {
-      padding: 132px 50px 50px 50px;
+    paper-tab a {
+      text-decoration: none;
+      margin-top: 25px;
+      text-align: center;
+      color: white;
+    }
+
+    iron-pages {
+      max-width: 900px;
+      margin: 0 auto;
     }
 
     @media (max-width: 767px) {
+      :host {
+        padding-top: 142px;
+      }
+
       app-toolbar > h1 {
         font-size: 1.1em;
       }
 
-      .content {
-        padding: 132px 20px 20px 20px;
+      iron-pages {
+        padding: 0px 10px 10px 10px;
       }
     }
     </style>
 
+    <!-- App routing -->
+    <app-location route="{{route}}"></app-location>
+    <app-route
+      route="{{route}}"
+      pattern="/:page"
+      data="{{routeData}}"
+      tail="{{subroute}}">
+    </app-route>
+
+    <!-- Header -->
     <app-header condenses reveals fixed effects="waterfall">
       <app-toolbar>
         <h1 main-title>Airports Data</h1>
       </app-toolbar>
 
       <paper-tabs selected="{{page}}" attr-for-selected="name" sticky>
-        <paper-tab name="query">Query</paper-tab>
-        <paper-tab name="reports">Reports</paper-tab>
+        <paper-tab name="query">
+          <a href="/query">Query</a>
+        </paper-tab>
+        <paper-tab name="reports">
+          <a href="/reports">Reports</a>
+        </paper-tab>
       </paper-tabs>
     </app-header>
 
-    <div class="content">
-      <iron-pages role="main" selected="[[page]]" attr-for-selected="name" selected-attribute="visible">
-        <airports-query name="query">Hola</airports-query>
-        <airports-reports name="reports">Mundo!</airports-reports>
-        <airports-airport name="airport">Mundo!</airports-airport>
-      </iron-pages>
-    </div>
+    <!-- Content -->
+    <iron-pages role="main" selected="[[page]]" attr-for-selected="name" selected-attribute="visible">
+      <airports-query name="query" api-base="[[apiBase]]"></airports-query>
+      <airports-reports name="reports" api-base="[[apiBase]]"></airports-reports>
+      <airports-airport name="airport" api-base="[[apiBase]]"></airports-airport>
+    </iron-pages>
 
   </template>
   <script>
@@ -104,10 +138,24 @@
       is: 'airports-data-app',
 
       properties: {
+
         page: {
           type: String,
           value: 'query'
-        }
+        },
+
+        apiBase: String
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)'
+      ],
+
+      _routePageChanged: function(page) {
+        this.page = page || 'query';
+        // Scroll to the top of the page on every *route* change. Use `Polymer.AppLayout.scroll`
+        // with `behavior: 'silent'` to disable header scroll effects during the scroll.
+        Polymer.AppLayout.scroll({ top: 0, behavior: 'silent' });
       },
 
     });
