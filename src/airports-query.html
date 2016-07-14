@@ -25,10 +25,6 @@
       margin-bottom: 10px;
     }
 
-    airports-airport-card {
-      margin-bottom: 10px;
-    }
-
     .button-wrapper {
       @apply(--layout-vertical);
       @apply(--layout-center);
@@ -80,7 +76,26 @@
       @apply(--layout-center);
     }
 
+    @media (min-width: 768px) {
+
+      .results {
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
+      }
+
+      .card {
+        margin: 0px 10px 10px 0px;
+        min-width: 400px;
+        @apply(--layout-flex);
+      }
+    }
+
     @media (max-width: 767px) {
+
+      .card {
+        min-width: 0px;
+        margin: 0px 0px 10px 0px;
+      }
 
       .load-more {
         width: 100%;
@@ -124,10 +139,10 @@
 
     <div class="results">
       <template is="dom-repeat" items="[[runways]]">
-        <airports-runway-card data="[[item]]"></airports-runway-card>
+        <airports-runway-card class="card" data="[[item]]"></airports-runway-card>
       </template>
       <template is="dom-repeat" items="[[airports]]">
-        <airports-airport-card data="[[item]]" code="[[countryCode]]"></airports-airport-card>
+        <airports-airport-card class="card" data="[[item]]" code="[[countryCode]]"></airports-airport-card>
       </template>
       <div class="no-result-message" hidden="{{!noResults}}">Airport {{search}} has no registered runways.</div>
     </div>
