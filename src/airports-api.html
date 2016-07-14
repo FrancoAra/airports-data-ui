@@ -21,6 +21,24 @@
         this.ajax.method = 'GET';
         this.ajax.url = this.rpath('/api/search/'+query);
         this.request(done);
+      },
+
+      countriesWithMostAirports: function (done) {
+        this.ajax.method = 'GET';
+        this.ajax.url = this.rpath('/api/countries/most');
+        this.request(done);
+      },
+
+      countriesWithLeastAirports: function (done) {
+        this.ajax.method = 'GET';
+        this.ajax.url = this.rpath('/api/countries/least');
+        this.request(done);
+      },
+
+      mostCommonRunwayLatitudes: function (done) {
+        this.ajax.method = 'GET';
+        this.ajax.url = this.rpath('/api/latitudes/most');
+        this.request(done);
       }
     });
   </script>
