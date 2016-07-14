@@ -70,7 +70,7 @@
       <template is="dom-repeat" items="[[airports]]">
         <airports-airport-card data="[[item]]"></airports-airport-card>
       </template>
-      <div class="no-result-message" hidden="{{!noResults}}">No result found for query {{search}}.</div>
+      <div class="no-result-message" hidden="{{!noResults}}">Airport {{search}} has no registered runways.</div>
     </div>
 
     <div class="button-wrapper">
@@ -113,6 +113,7 @@
           }
           if (result.type == "airports") {
             var airports = result.data;
+            self.search = result.code;
             self.airports = airports;
             if (airports.length == 0 || airports.length < 10)
               self.hideLoadMore = true;
