@@ -1,11 +1,16 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../bower_components/app-layout/helpers/helpers.html">
+
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+
 <link rel="import" href="../bower_components/paper-search/paper-search.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
 <link rel="import" href="airports-api.html">
+<link rel="import" href="airports-image.html">
 <link rel="import" href="airports-airport-card.html">
 <link rel="import" href="airports-runway-card.html">
 
@@ -46,29 +51,83 @@
       color: #bbb;
     }
 
+    .sub-tool {
+      height: 50px;
+      width: 100%;
+      margin-bottom: 10px;
+      @apply(--layout-horizontal);
+    }
+
+    airports-image {
+      width: 87px;
+      height: 50px;
+      margin-left: 10px;
+      border-radius: 4px;
+    }
+
+    .flex {
+      @apply(--layout-flex);
+    }
+
+    .back-button {
+      width: 87px;
+      height: 45px;
+      padding-top: 5px;
+      margin-right: 10px;
+      background-color: white;
+      border-radius: 4px;
+      @apply(--layout-vertical);
+      @apply(--layout-center);
+    }
+
     @media (max-width: 767px) {
 
       .load-more {
         width: 100%;
+      }
+
+      .back-button {
+        width: 40px;
+        background-color: transparent;
       }
     }
     </style>
 
     <airports-api id="api" base="[[apiBase]]"></airports-api>
 
-    <paper-search-bar
-      placeholder="Search Country"
-      hide-filter-button
-      query="{{search}}"
-      on-paper-search-search="_query">
-    </paper-search-bar>
+    <iron-media-query query="(max-width: 767px)" query-matches="{{isMobile}}"></iron-media-query>
+
+    <div class="sub-tool">
+
+      <div class="back-button" hidden="[[!isRunway]]" on-tap="_backToAirports">
+        <paper-icon-button icon="arrow-back"></paper-icon-button>
+      </div>
+
+      <paper-search-bar
+        class="flex"
+        placeholder="Search Country"
+        hide-filter-button
+        query="{{search}}"
+        on-paper-search-search="_query">
+      </paper-search-bar>
+
+      <template is="dom-if" if="[[!isMobile]]">
+        <airports-image
+          class="sub-tool-item"
+          hidden="[[isMobile]]"
+          src="../bower_components/country-flags/svg/[[countryCode]].svg"
+          alt="[[countryCode]]">
+        </airports-image>
+      </template>
+
+    </div>
 
     <div class="results">
       <template is="dom-repeat" items="[[runways]]">
         <airports-runway-card data="[[item]]"></airports-runway-card>
       </template>
       <template is="dom-repeat" items="[[airports]]">
-        <airports-airport-card data="[[item]]"></airports-airport-card>
+        <airports-airport-card data="[[item]]" code="[[countryCode]]"></airports-airport-card>
       </template>
       <div class="no-result-message" hidden="{{!noResults}}">Airport {{search}} has no registered runways.</div>
     </div>
@@ -88,6 +147,13 @@
         apiBase: String,
 
         page: Number,
+
+        lastSearch: String,
+
+        isRunway: {
+          type: Boolean,
+          value: false
+        },
 
         hideLoadMore: {
           type: Boolean,
@@ -109,17 +175,22 @@
         this.$.api.search(this.search.replace('#', '$'), function (result) {
           if (typeof result.data === 'undefined' || result.data.length == 0) {
             self.noResults = true;
+            self.isRunway = true;
             return
           }
           if (result.type == "airports") {
             var airports = result.data;
+            self.lastSearch = result.code;
             self.search = result.code;
+            self.isRunway = false;
+            self.countryCode = result.code.toLowerCase();
             self.airports = airports;
             if (airports.length == 0 || airports.length < 10)
               self.hideLoadMore = true;
             else
               self.hideLoadMore = false;
           } else if (result.type == "runways") {
+            self.isRunway = true;
             self.runways = result.data;
             self.hideLoadMore = true;
           }
@@ -142,6 +213,16 @@
       _loadRunways: function (event) {
         this.search = '#'+event.detail;
         Polymer.AppLayout.scroll({ top: 0, behavior: 'smooth' });
+        this._query();
+      },
+
+      _backToAirports: function () {
+        this.search = this.lastSearch;
+        this._query();
+      },
+
+      ready: function () {
+        this.search = "MX";
         this._query();
       }
     });
