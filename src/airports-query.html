@@ -78,6 +78,10 @@
 
     @media (min-width: 768px) {
 
+      .no-result-message {
+        width: 100%;
+      }
+
       .results {
         @apply(--layout-horizontal);
         @apply(--layout-wrap);
@@ -93,7 +97,6 @@
     @media (max-width: 767px) {
 
       .card {
-        min-width: 0px;
         margin: 0px 0px 10px 0px;
       }
 
@@ -237,7 +240,7 @@
       },
 
       ready: function () {
-        this.search = "MX";
+        this.search = "NL";
         this._query();
       }
     });

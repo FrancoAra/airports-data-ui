@@ -1,6 +1,7 @@
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
@@ -17,14 +18,28 @@
     paper-card {
       width: 100%;
     }
+
+    .card-content {
+      @apply(--layout-horizontal);
+    }
+
+    .content-wrapper {
+      @apply(--layout-flex);
+    }
     </style>
 
-    <paper-card heading="[[data._id]]">
+    <paper-card heading="Runway [[data.le_ident]]">
       <div class="card-content">
-        <airports-card-info name="Length" data="[[data.length_ft]] ft."></airports-card-info>
-        <airports-card-info name="Width" data="[[data.width_ft]] ft."></airports-card-info>
-        <airports-card-info name="Lighted" data="[[data.lighted]]"></airports-card-info>
-        <airports-card-info name="Closed" data="[[data.closed]]"></airports-card-info>
+        <div class="content-wrapper">
+          <airports-card-info name="Closed" data="[[data.closed]]"></airports-card-info>
+          <airports-card-info name="Length" data="[[data.length_ft]] ft."></airports-card-info>
+          <airports-card-info name="Width" data="[[data.width_ft]] ft."></airports-card-info>
+        </div>
+        <div class="content-wrapper">
+          <airports-card-info name="Lighted" data="[[data.lighted]]"></airports-card-info>
+          <airports-card-info name="Surface" data="[[data.surface]]"></airports-card-info>
+          <airports-card-info name="Elevation" data="[[data.le_elevation_ft]] ft."></airports-card-info>
+        </div>
       </div>
     </paper-card>
   </template>

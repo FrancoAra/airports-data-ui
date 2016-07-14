@@ -13,12 +13,12 @@
     <style>
     :host {
       display: block;
-      position: relative;
     }
 
     paper-card {
       width: 100%;
-      min-height: 350px;
+      height: 350px;
+      @apply(--layout-vertical);
     }
 
     paper-button {
@@ -27,19 +27,29 @@
       width: 100%;
     }
 
-    .card-actions {
-      position: absolute;
-      width: 100%;
-      background-color: transparent;
-      bottom: 0;
+    .card-content {
+      @apply(--layout-flex);
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+    }
+
+    .content-wrapper {
+      @apply(--layout-flex);
     }
     </style>
 
     <paper-card heading="[[data.ident]]: [[data.name]]">
       <div class="card-content">
-        <airports-card-info name="Type" data="[[data.type]]"></airports-card-info>
-        <airports-card-info name="Latitude" data="[[data.latitude_deg]]"></airports-card-info>
-        <airports-card-info name="Longitude" data="[[data.longitude_deg]]"></airports-card-info>
+        <div class="content-wrapper">
+          <airports-card-info name="Type" data="[[data.type]]"></airports-card-info>
+          <airports-card-info name="Latitude" data="[[data.latitude_deg]]"></airports-card-info>
+          <airports-card-info name="Longitude" data="[[data.longitude_deg]]"></airports-card-info>
+        </div>
+        <div class="content-wrapper">
+          <airports-card-info name="Region" data="[[data.iso_region]]"></airports-card-info>
+          <airports-card-info name="Municipality" data="[[data.municipality]]"></airports-card-info>
+          <airports-card-info name="GPS Code" data="[[data.gps_code]]"></airports-card-info>
+        </div>
       </div>
       <div class="card-actions">
         <paper-button on-tap="_loadRunways">See Runways</paper-button>

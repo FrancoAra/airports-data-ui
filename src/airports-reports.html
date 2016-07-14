@@ -12,57 +12,64 @@
       display: block;
     }
 
-    paper-card {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    .report-data {
+    .card-content {
       @apply(--layout-horizontal);
       @apply(--layout-wrap);
     }
 
-    @media (max-width: 767px) {
+    airports-card-info {
+      width: 50px;
+    }
 
-      .report-data {
-        @apply(--layout-vertical);
-        height: 200px;
+    @media (min-width: 768px) {
+
+      .wrapper {
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
       }
 
+      paper-card {
+        min-width: 300px;
+        margin: 0px 10px 10px 0px;
+        @apply(--layout-flex);
+      }
+    }
+
+    @media (max-width: 767px) {
+
+      paper-card {
+        margin: 0px 0px 10px 0px;
+      }
     }
     </style>
 
     <airports-api id="api" base="[[apiBase]]"></airports-api>
 
-    <paper-card heading="Top 10 countries with airports">
-      <div class="card-content">
-        <div class="report-data">
+    <div class="wrapper">
+      <paper-card heading="Top 10 countries with airports">
+        <div class="card-content">
           <template is="dom-repeat" items="[[topCountries]]">
             <airports-card-info name="[[_plusOne(index)]]. [[item._id]]" data="[[item.airports]]"></airports-card-info>
           </template>
         </div>
-      </div>
-    </paper-card>
+      </paper-card>
 
-    <paper-card heading="Countries with 1 airport">
-      <div class="card-content">
-        <div class="report-data">
-          <template is="dom-repeat" items="[[leastCountries]]">
-            <airports-card-info name="[[item._id]]"></airports-card-info>
-          </template>
-        </div>
-      </div>
-    </paper-card>
-
-    <paper-card heading="Top 10 common runway latitudes">
-      <div class="card-content">
-        <div class="report-data">
+      <paper-card heading="Top 10 common runway latitudes">
+        <div class="card-content">
           <template is="dom-repeat" items="[[commonLatitudes]]">
             <airports-card-info name="[[_plusOne(index)]]. [[item._id]]" data="[[item.hits]]"></airports-card-info>
           </template>
         </div>
-      </div>
-    </paper-card>
+      </paper-card>
+
+      <paper-card heading="Countries with 1 airport">
+        <div class="card-content">
+          <template is="dom-repeat" items="[[leastCountries]]">
+            <airports-card-info name="[[item._id]]"></airports-card-info>
+          </template>
+        </div>
+      </paper-card>
+    </div>
 
   </template>
   <script>
