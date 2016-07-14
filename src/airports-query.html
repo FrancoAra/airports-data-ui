@@ -1,11 +1,13 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
+<link rel="import" href="../bower_components/app-layout/helpers/helpers.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../bower_components/paper-search/paper-search.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="airports-api.html">
 <link rel="import" href="airports-airport-card.html">
+<link rel="import" href="airports-runway-card.html">
 
 <dom-module id="airports-query">
   <template>
@@ -37,6 +39,13 @@
       width: 500px;
     }
 
+    .no-result-message {
+      margin: 30px;
+      text-align: center;
+      font-size: 20px;
+      color: #bbb;
+    }
+
     @media (max-width: 767px) {
 
       .load-more {
@@ -55,9 +64,13 @@
     </paper-search-bar>
 
     <div class="results">
-      <template is="dom-repeat" items="[[result]]">
+      <template is="dom-repeat" items="[[runways]]">
+        <airports-runway-card data="[[item]]"></airports-runway-card>
+      </template>
+      <template is="dom-repeat" items="[[airports]]">
         <airports-airport-card data="[[item]]"></airports-airport-card>
       </template>
+      <div class="no-result-message" hidden="{{!noResults}}">No result found for query {{search}}.</div>
     </div>
 
     <div class="button-wrapper">
@@ -82,16 +95,33 @@
         }
       },
 
+      listeners: {
+        'load-runways': '_loadRunways'
+      },
+
       _query: function () {
         var self = this;
-        this.result = [];
+        this.runways = [];
+        this.airports = [];
         this.page = 1;
-        this.$.api.airportsPage(this.search, 1, function (airports) {
-          self.result = airports;
-          if (airports.length == 0 || airports.length < 10)
+        this.noResults = false;
+        this.hideLoadMore = true;
+        this.$.api.search(this.search.replace('#', '$'), function (result) {
+          if (typeof result.data === 'undefined' || result.data.length == 0) {
+            self.noResults = true;
+            return
+          }
+          if (result.type == "airports") {
+            var airports = result.data;
+            self.airports = airports;
+            if (airports.length == 0 || airports.length < 10)
+              self.hideLoadMore = true;
+            else
+              self.hideLoadMore = false;
+          } else if (result.type == "runways") {
+            self.runways = result.data;
             self.hideLoadMore = true;
-          else
-            self.hideLoadMore = false;
+          }
         });
       },
 
@@ -99,7 +129,7 @@
         var self = this;
         this.$.api.airportsPage(this.search, ++this.page, function (airports) {
           for (var i in airports) {
-            self.push('result', airports[i])
+            self.push('airports', airports[i])
           }
           if (airports.length == 0 || airports.length < 10)
             self.hideLoadMore = true;
@@ -108,8 +138,14 @@
         });
       },
 
+      _loadRunways: function (event) {
+        this.search = '#'+event.detail;
+        Polymer.AppLayout.scroll({ top: 0, behavior: 'smooth' });
+        this._query();
+      },
+
       ready: function () {
-        this.search = "NE";
+        this.search = "#DDRA";
         this._query();
       }
     });

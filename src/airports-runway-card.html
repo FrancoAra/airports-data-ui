@@ -1,0 +1,40 @@
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+
+<link rel="import" href="airports-card-info.html">
+
+<dom-module id="airports-runway-card">
+  <template>
+    <style>
+    :host {
+      display: block;
+    }
+
+    paper-card {
+      width: 100%;
+    }
+    </style>
+
+    <paper-card heading="[[data._id]]">
+      <div class="card-content">
+        <airports-card-info name="Length" data="[[data.length_ft]] ft."></airports-card-info>
+        <airports-card-info name="Width" data="[[data.width_ft]] ft."></airports-card-info>
+        <airports-card-info name="Lighted" data="[[data.lighted]]"></airports-card-info>
+        <airports-card-info name="Closed" data="[[data.closed]]"></airports-card-info>
+      </div>
+    </paper-card>
+  </template>
+  <script>
+    Polymer({
+      is: 'airports-runway-card',
+
+      properties: {
+        data: Object
+      }
+    });
+  </script>
+</dom-module>

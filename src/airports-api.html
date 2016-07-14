@@ -15,6 +15,12 @@
         this.ajax.method = 'GET';
         this.ajax.url = this.rpath('/api/'+country+'/airports/'+page);
         this.request(done);
+      },
+
+      search: function (query, done) {
+        this.ajax.method = 'GET';
+        this.ajax.url = this.rpath('/api/search/'+query);
+        this.request(done);
       }
     });
   </script>
